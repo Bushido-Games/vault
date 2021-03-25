@@ -1,0 +1,12 @@
+version: '3'
+services:
+  env-test:
+    container_name: env-test
+    image: alpine:latest
+#    command: echo $IAI_USERNAME
+    command: sh
+    tty: true
+    environment:
+      IAI_USERNAME: ${BUSHIDO_LOCAL_SHOP_MANAGMENT_TOOLS_IAI_USERNAME}
+      FOO: '123'
+      VAULT_API_ADDR: http://0.0.0.0:8200
