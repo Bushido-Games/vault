@@ -2,8 +2,8 @@
 
 function command_help() {
   printf "\
-    %s -p|--project PROJECT_NAME\r
-         [-e|--env ['local' | 'stable'] default: 'local']\r
+    %s [-p|--project PROJECT_NAME]\r
+         [-e|--env ['local' | 'stable'] default: 'local'] COMMAND\r
   " $0 >&2
 }
 
@@ -45,8 +45,22 @@ while test $# -gt 0; do
     -*|--*)
       error_msg "invalid argument: $1"
       ;;
+    *)
+      COMMAND="$*"
+      break;
+      ;;
   esac
 done
+
+if [[ -z "$COMMAND" ]]; then
+  error_msg "Provide command to run. Example:\n
+  $0 docker-compose up\n"
+fi
+
+if [[ -z "$GITHUB_TOKEN" ]]; then
+  error_msg "No github token found in your environment. Example:\n
+  export GITHUB_TOKEN=abcd1234567890\n"
+fi
 
 if [[ -z "$ENVIRONMENT" ]]; then
   ENVIRONMENT='local'
@@ -63,11 +77,11 @@ if [[ -z "$PROJECT" ]]; then
   "
 fi
 
-VAULT_TOKEN=$(docker run -e VAULT_ADDR="$VAULT_ADDR" vault sh -c "
+VAULT_TOKEN=$(docker run --rm -e VAULT_ADDR="$VAULT_ADDR" vault sh -c "
   vault login -token-only -no-store -method=github token=${GITHUB_TOKEN};\
   ")
 
-ENVS=$(docker run \
+ENVS=$(docker run --rm\
   -e VAULT_ADDR="$VAULT_ADDR"\
   -e VAULT_TOKEN="$VAULT_TOKEN"\
   'hashicorp/envconsul:alpine' -upcase\
@@ -86,5 +100,4 @@ do
   export "$VAR"
 done
 
-echo $BUSHIDO_LOCAL_SHOP_MANAGMENT_TOOLS_IAI_PASSWORD
-#docker-compose up
+${COMMAND}
