@@ -47,7 +47,7 @@ For more details, refer to the [Vault documentation](https://www.vaultproject.io
 Helper for docker-compose. Retrieves project environmental variables and passes them to the docker-compose file
 
 #### Installation:
-- Copy `scripts/dc` file to any $PATH folder (e.g. `~/bin/` or `/usr/bin/`). 
+- Copy `scripts/envvault` file to any $PATH folder (e.g. `~/bin/` or `/usr/bin/`). 
 - Make sure $GITHUB_TOKEN variable is defined
 
 #### Usage:
