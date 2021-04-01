@@ -17,8 +17,9 @@ You also need to set $VAULT_ADDR environment to point to the vault server addres
 **Important!** For successful connection you need to use VPN.
 
 Install Vault:
+
 ```angular2html
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update && sudo apt-get install vault
 ```
@@ -34,9 +35,10 @@ Now you can use vault api to retrieve, create, update and delete variables:
 - Delete: `vault kv delete bushido/local/hello`
 
 The path is constructed from three parts:
+
 1. `bushido/` - constant prefix for all paths.
 1. `ENVIRONMENT/` - this can take two options: `local` for local development or `staging` for staging deployments.
-1. `PROJECT_NAME` - a project name. This should exactly match with a project repository name. 
+1. `PROJECT_NAME` - a project name. This should exactly match with a project repository name.
 
 For more details, refer to the [Vault documentation](https://www.vaultproject.io/docs/secrets/kv/kv-v2)
 
@@ -46,13 +48,15 @@ For more details, refer to the [Vault documentation](https://www.vaultproject.io
 
 Helper for docker-compose. Retrieves project environmental variables and passes them to the docker-compose file
 
-#### Installation:
-- Copy `scripts/envvault` file to any $PATH folder (e.g. `~/bin/` or `/usr/bin/`). 
+#### Installation
+
+- Copy `scripts/envvault` file to any $PATH folder (e.g. `~/bin/` or `/usr/bin/`).
 - Make sure $GITHUB_TOKEN variable is defined
 
-#### Usage:
+#### Usage
 
 Options:
+
 - `-h|--help` - render help message.
 - `-p|--project PROJECT_NAME` - retrieve specific project environment. By default, the script will try to extract the project name from `package.json` file.
 - `-e|--env local|staging` - retrieve variables assigned to selected environment. Default: local.
