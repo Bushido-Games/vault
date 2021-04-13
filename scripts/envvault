@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version: 1.0.0
+# version: 1.0.1
 
 function command_help() {
   printf "\
@@ -96,9 +96,12 @@ if [[ -z "$ENVS" ]]; then
   error_msg "Incorrect project name"
 fi
 
+BACKUP_IFS="$IFS"
+IFS=$'\n'
 for VAR in $ENVS
 do
   export "$VAR"
 done
+IFS="$BACKUP_IFS"
 
 ${COMMAND}
