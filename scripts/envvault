@@ -4,7 +4,7 @@
 function command_help() {
   printf "\
     %s [-p|--project PROJECT_NAME]\r
-         [-e|--env ['local' | 'stable'] default: 'local'] COMMAND\r
+         [-e|--env ['local' | 'staging' | 'prod'] default: 'local'] COMMAND\r
   " $0 >&2
 }
 
