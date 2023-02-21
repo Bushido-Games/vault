@@ -1,4 +1,4 @@
-FROM vault:latest
+FROM vault:1.12.3
 
 WORKDIR /vault
 
