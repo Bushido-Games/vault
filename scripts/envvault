@@ -78,7 +78,7 @@ if [[ -z "$PROJECT" ]]; then
   "
 fi
 
-VAULT_TOKEN=$(docker run --rm -e VAULT_ADDR="$VAULT_ADDR" vault sh -c "
+VAULT_TOKEN=$(docker run --rm -e VAULT_ADDR="$VAULT_ADDR" 'hashicorp/vault' sh -c "
   vault login -token-only -no-store -method=github token=${GITHUB_TOKEN};\
   ")
 
