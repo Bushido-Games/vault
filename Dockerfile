@@ -1,4 +1,4 @@
-FROM vault:1.12.3
+FROM hashicorp/vault:1.14.2
 
 WORKDIR /vault
 
