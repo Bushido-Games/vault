@@ -43,7 +43,7 @@ jobs:
           url: "https://release-staging.bushidogames.com/"
           method: "POST"
           data: '{ "authorizationKey": "${{ secrets.RELEASE_AUTHORIZATION_KEY }}", "project": "${{ github.event.repository.name }}", "staging": "true" }'
-          files: '{ "file": "${{ github.workspace }}/docker-compose-staging.yml" }'
+          files: '{ "file": "${{ github.workspace }}/docker-compose.yml" }'
 
       - name: Deploy production
         if: ${{ !inputs.isStaging }}
@@ -53,4 +53,4 @@ jobs:
           url: "https://release.bushidogames.com/"
           method: "POST"
           data: '{ "authorizationKey": "${{ secrets.PRODUCTION_RELEASE_AUTHORIZATION_KEY }}", "project": "${{ github.event.repository.name }}" }'
-          files: '{ "file": "${{ github.workspace }}/docker-compose-prod.yml" }'
+          files: '{ "file": "${{ github.workspace }}/docker-compose.yml" }'
