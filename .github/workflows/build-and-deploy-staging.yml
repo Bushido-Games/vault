@@ -1,0 +1,44 @@
+name: Build images and deploy staging
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH keys
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SUBMODULE_DEPLOY_KEY }}
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Cache dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+
+  call-create-pkg-vault:
+    uses: ./.github/workflows/create-pkg.yml
+    with:
+      pkg-name: vault
+    secrets:
+      SUBMODULE_DEPLOY_KEY: ${{ secrets.SUBMODULE_DEPLOY_KEY }}
+    needs:
+      - build-packages
+
+  call-deploy-staging:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      isStaging: true
+    secrets:
+      RELEASE_AUTHORIZATION_KEY: ${{ secrets.STAGING_RELEASE_AUTHORIZATION_KEY }}
+      SUBMODULE_DEPLOY_KEY: ${{ secrets.SUBMODULE_DEPLOY_KEY }}
+    needs:
+      - call-create-pkg-vault
