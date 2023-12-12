@@ -18,12 +18,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Cache dependencies
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn
-
   call-create-pkg-vault:
     uses: ./.github/workflows/create-pkg.yml
     with:
