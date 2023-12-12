@@ -52,7 +52,7 @@ git add .yarn/versions
 
 PACKAGE_VERSION=$(cat package.json|grep version|head -1|awk -F: '{ print $2 }'|sed 's/[", ]//g')
 
-replace_version_number "$PACKAGE_VERSION" "./docker-compose.yml"
+replace_version_number "$PACKAGE_VERSION" "./docker-compose-prod.yml"
 
 git commit -a -m"new version: v${PACKAGE_VERSION}" --no-verify
 git tag -a "v${PACKAGE_VERSION}" -m"new version: v${PACKAGE_VERSION}"

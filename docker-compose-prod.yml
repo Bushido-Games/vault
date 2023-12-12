@@ -2,7 +2,7 @@ version: "3"
 services:
   vault:
     container_name: vault
-    build: .
+    image: ghcr.io/bushido-games/vault:1.0.0
     command: vault server -config /vault/config/config.hlc
     restart: always
     volumes:
