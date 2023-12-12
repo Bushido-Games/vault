@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      isStaging:
+        description: "Deploy staging"
+        required: false
+        type: boolean
+  workflow_call:
+    inputs:
+      isStaging:
+        required: false
+        type: boolean
+    secrets:
+      RELEASE_AUTHORIZATION_KEY:
+        required: true
+      SUBMODULE_DEPLOY_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Setup SSH keys
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SUBMODULE_DEPLOY_KEY }}
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Deploy staging
+        if: ${{ inputs.isStaging }}
+        uses: fjogeleit/http-request-action@v1
+        with:
+          timeout: 600000
+          url: "https://release-staging.bushidogames.com/"
+          method: "POST"
+          data: '{ "authorizationKey": "${{ secrets.RELEASE_AUTHORIZATION_KEY }}", "project": "${{ github.event.repository.name }}", "staging": "true" }'
+          files: '{ "file": "${{ github.workspace }}/docker-compose-prod.yml" }'
+
+      - name: Deploy production
+        if: ${{ !inputs.isStaging }}
+        uses: fjogeleit/http-request-action@v1
+        with:
+          timeout: 600000
+          url: "https://release.bushidogames.com/"
+          method: "POST"
+          data: '{ "authorizationKey": "${{ secrets.PRODUCTION_RELEASE_AUTHORIZATION_KEY }}", "project": "${{ github.event.repository.name }}" }'
+          files: '{ "file": "${{ github.workspace }}/docker-compose-prod.yml" }'
